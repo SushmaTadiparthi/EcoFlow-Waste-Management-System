@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bin Data</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Bin Data</h1>
+        <form id="binForm">
+            <label for="bin">Select a Bin:</label>
+            <select id="bin" name="bin">
+                <option value="Bin 1">Bin 1</option>
+                <option value="Bin 2">Bin 2</option>
+                <option value="Bin 3">Bin 3</option>
+                <option value="Bin 4">Bin 4</option>
+                <option value="Bin 5">Bin 5</option>
+                <option value="Bin 6">Bin 6</option>
+            </select>
+            <button type="submit">Get Bin Data</button>
+        </form>
+        <div id="binData">
+            <!-- Bin data will be displayed here -->
+        </div>
+        <a href="/" class="button">Back to Home</a>
+    </div>
+    <script>
+        // Handle form submission using JavaScript
+        document.getElementById('binForm').addEventListener('submit', function(e) {
+            e.preventDefault();  // Prevent default form submission
+
+            const bin = document.getElementById('bin').value;
+            fetch('/get_bin_data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({ bin: bin })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('binData').innerHTML = `<p style="color: red;">${data.error}</p>`;
+                } else {
+                    document.getElementById('binData').innerHTML = `
+                        <p><strong>Bin:</strong> ${data.bin}</p>
+                        <p><strong>Filled:</strong> ${data.filled}</p>
+                        <p><strong>Empty:</strong> ${data.empty}</p>
+                        <p><strong>Capacity:</strong> ${data.capacity}</p>
+                    `;
+                }
+            })
+            .catch(err => {
+                document.getElementById('binData').innerHTML = `<p style="color: red;">Error: ${err.message}</p>`;
+            });
+        });
+    </script>
+</body>
+</html>

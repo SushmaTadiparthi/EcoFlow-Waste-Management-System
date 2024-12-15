@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Optimize Waste Collection Route</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #a8dadc, #457b9d);
+            color: #1d3557;
+            margin: 0;
+            padding: 0;
+        }
+    
+        h1 {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 2.5em;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+    
+        ul {
+            list-style-type: none;
+            padding: 0;
+            text-align: center;
+        }
+    
+        ul li {
+            display: inline-block;
+            margin: 15px;
+        }
+    
+        ul li a {
+            text-decoration: none;
+            padding: 10px 20px;
+            font-size: 1.2em;
+            color: #ff7e5f;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+    
+        ul li a:hover {
+            background-color: #feb47b;
+            color: #fff;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
+        }
+    
+        form {
+            max-width: 400px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+    
+        form label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+            color: #333;
+        }
+    
+        form input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 2px 2px 6px rgba(0, 0, 0, 0.1);
+        }
+    
+        form button {
+            width: 100%;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: #ff7e5f;
+            color: #fff;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+    
+        form button:hover {
+            background: #feb47b;
+        }
+    
+        #insights {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            text-align: center;
+            color: #333;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+    </style>
+    
+</head>
+<body>
+    <h1>Optimize Waste Collection Route</h1>
+    <form id="route-form">
+        <label for="location">Location:</label>
+        <input type="text" name="location" id="location" required>
+        <button type="submit">Optimize</button>
+    </form>
+    <div id="result"></div>
+
+    <script>
+        document.getElementById('route-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from redirecting
+
+    const data = {
+        location: document.getElementById('location').value
+    };
+
+    fetch('/optimize_route', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data) // Send JSON payload
+    })
+        .then(response => response.json())
+        .then(result => {
+            const resultDiv = document.getElementById('result');
+            if (result.error) {
+                resultDiv.innerHTML = `<p style="color: red;">Error: ${result.error}</p>`;
+            } else {
+                resultDiv.innerHTML = `<p style="color: green;">Optimized Route: ${result.optimized_route}</p>`;
+            }
+        })
+        .catch(err => {
+            document.getElementById('result').innerHTML = `<p style="color: red;">An error occurred.</p>`;
+        });
+});
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js"></script>
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Route Map</h1>
+        <form id="route-form">
+            <label for="start">Select Start Zone:</label>
+            <select id="start" name="start">
+                <option value="16.5062,80.6480">Vijayawada</option>
+                <option value="16.3067,80.4365">Guntur</option>
+                <option value="16.1785,81.1309">Machilipatnam</option>
+            </select>
+
+            <label for="destination">Select Destination Zone:</label>
+            <select id="destination" name="destination">
+                <option value="16.5062,80.6480">Vijayawada</option>
+                <option value="16.3067,80.4365">Guntur</option>
+                <option value="16.1785,81.1309">Machilipatnam</option>
+            </select>
+
+            <button type="submit">Show Route</button>
+        </form>
+
+        <div id="map"></div>
+    </div>
+
+    <script>
+        // Initialize the map
+        const map = L.map('map').setView([16.5062, 80.6480], 10);
+
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Handle form submission
+        document.getElementById('route-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const start = document.getElementById('start').value.split(',');
+            const destination = document.getElementById('destination').value.split(',');
+
+            if (start[0] === destination[0] && start[1] === destination[1]) {
+                alert("Start and Destination cannot be the same.");
+                return;
+            }
+
+            // Clear any existing routes
+            if (window.routeControl) {
+                map.removeControl(window.routeControl);
+            }
+
+            // Add routing control
+            window.routeControl = L.Routing.control({
+                waypoints: [
+                    L.latLng(start[0], start[1]),
+                    L.latLng(destination[0], destination[1])
+                ],
+                routeWhileDragging: true
+            }).addTo(map);
+        });
+    </script>
+</body>
+</html>
